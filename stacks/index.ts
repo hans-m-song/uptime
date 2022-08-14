@@ -1,12 +1,6 @@
-import {
-  Api,
-  App,
-  Cron,
-  Table,
-  ViteStaticSite,
-} from "@serverless-stack/resources";
+import * as sst from "@serverless-stack/resources";
 
-export default function (app: App) {
+export default function (app: sst.App) {
   app.setDefaultFunctionProps({
     runtime: "nodejs16.x",
     srcPath: "services",
@@ -26,31 +20,29 @@ export default function (app: App) {
     ? "uptime-debug.k8s.axatol.xyz"
     : "uptime.k8s.axatol.xyz";
 
-  app.stack(function stack({ app, stack }) {
-    const historyTable = new Table(stack, "history-table", {
-      fields: { date: "number", time: "number" },
-      primaryIndex: { partitionKey: "date", sortKey: "time" },
+  app.stack(function stack({ stack }) {
+    const historyTable = new sst.Table(stack, "history-table", {
+      fields: { day: "number", minute: "number" },
+      primaryIndex: { partitionKey: "day", sortKey: "minute" },
     });
 
-    const targetTable = new Table(stack, "target-table", {
+    const targetTable = new sst.Table(stack, "target-table", {
       fields: { url: "string" },
       primaryIndex: { partitionKey: "url" },
     });
 
-    app.setDefaultFunctionProps({
-      permissions: [historyTable, targetTable],
-      environment: {
-        HISTORY_TABLE_NAME: historyTable.tableName,
-        TARGET_TABLE_NAME: targetTable.tableName,
-      },
+    stack.addDefaultFunctionPermissions([historyTable, targetTable]);
+    stack.addDefaultFunctionEnv({
+      HISTORY_TABLE_NAME: historyTable.tableName,
+      TARGET_TABLE_NAME: targetTable.tableName,
     });
 
-    new Cron(stack, "cron", {
+    new sst.Cron(stack, "cron", {
       schedule: "rate(5 minutes)",
-      job: "functions/heartbeat.handler",
+      job: "functions/createHeartbeat.handler",
     });
 
-    const api = new Api(stack, "api", {
+    const api = new sst.Api(stack, "api", {
       customDomain: { domainName: apiDomainName, hostedZone },
       cors: { allowOrigins: [`https://${siteDomainName}`] },
       routes: {
@@ -58,10 +50,11 @@ export default function (app: App) {
         "POST   /api/targets": "functions/createTarget.handler",
         "DELETE /api/targets/{id}": "functions/deleteTarget.handler",
         "GET    /api/uptime": "functions/getUptime.handler",
+        "POST   /api/heartbeat": "functions/submitHeartbeat.handler",
       },
     });
 
-    const site = new ViteStaticSite(stack, "web", {
+    const site = new sst.ViteStaticSite(stack, "web", {
       path: "web/",
       customDomain: { domainName: siteDomainName, hostedZone },
       environment: {

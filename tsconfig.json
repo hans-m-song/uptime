@@ -1,4 +1,9 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
-  "include": ["stacks", "web", "services"]
+  "compilerOptions": {
+    "paths": {
+      "@uptime/lib": ["./lib/*"]
+    }
+  },
+  "include": ["stacks", "web", "services", "lib"]
 }

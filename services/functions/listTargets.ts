@@ -1,9 +1,12 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { Target } from "~/models/target";
+import { response, StatusCode } from "~/lib/http";
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "text/plain" },
-    body: `Hello, World! Your request was received at ${event.requestContext.time}.`,
-  };
+export const handler: APIGatewayProxyHandlerV2 = async () => {
+  const targets = await Target.all();
+
+  return response("OK", {
+    statusCode: StatusCode.Ok,
+    body: { targets },
+  });
 };
