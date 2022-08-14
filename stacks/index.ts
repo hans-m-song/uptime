@@ -5,7 +5,6 @@ import {
   Table,
   ViteStaticSite,
 } from "@serverless-stack/resources";
-import { RemovalPolicy } from "aws-cdk-lib";
 
 export default function (app: App) {
   app.setDefaultFunctionProps({
@@ -48,7 +47,7 @@ export default function (app: App) {
 
     new Cron(stack, "cron", {
       schedule: "rate(5 minutes)",
-      job: "functions/ping.handler",
+      job: "functions/heartbeat.handler",
     });
 
     const api = new Api(stack, "api", {
@@ -58,7 +57,7 @@ export default function (app: App) {
         "GET    /api/targets": "functions/listTargets.handler",
         "POST   /api/targets": "functions/createTarget.handler",
         "DELETE /api/targets/{id}": "functions/deleteTarget.handler",
-        "GET    /api/uptime": "functions/uptime.handler",
+        "GET    /api/uptime": "functions/getUptime.handler",
       },
     });
 
