@@ -1,0 +1,17 @@
+# dependencies
+node_modules
+
+#web
+web/dist
+
+# sst
+.sst
+.build
+cdk.out
+cdk.context.json
+
+# misc
+.DS_Store
+
+# local env files
+.env*.local

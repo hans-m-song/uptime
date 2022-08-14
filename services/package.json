@@ -1,0 +1,14 @@
+{
+  "name": "@uptime/services",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.145.0",
+    "@aws-sdk/lib-dynamodb": "^3.145.0",
+    "aws-lambda": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.102"
+  }
+}

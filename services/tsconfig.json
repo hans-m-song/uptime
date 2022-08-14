@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["functions"],
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["DOM", "ES2015"],
+    "target": "es2017",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "."
+  }
+}
