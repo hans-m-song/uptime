@@ -54,3 +54,6 @@ export const timestampToDayMinute = (
 export type MaybeSuccess<T, E = unknown> =
   | { success: true; data: T }
   | { success: false; error: E };
+
+export const slug = (input: string) =>
+  input.toLowerCase().replace(/[^a-z]+/g, "-");

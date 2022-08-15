@@ -10,8 +10,16 @@ const ping = async (url: string): Promise<number> => {
     const result = await axios.get(url, { timeout: PING_TIMEOUT });
     return result.status;
   } catch (error) {
-    log.warn("createHeartbeat.ping", "failed", error);
-    return (error as AxiosError).response?.status ?? 0;
+    const status = (error as AxiosError).response?.status ?? 0;
+    log.warn(
+      "createHeartbeat.ping",
+      "failed",
+      log.fragment("url", url),
+      log.fragment("status", status),
+      error
+    );
+
+    return status;
   }
 };
 
@@ -36,7 +44,11 @@ export const handler: ScheduledHandler = async (event) => {
     targets,
   });
 
-  await heartbeat.save();
+  const saved = await heartbeat.save();
 
-  log.info("createHeartbeat", log.fragment("duration", duration));
+  log.info(
+    "createHeartbeat",
+    log.fragment("duration", duration),
+    log.fragment("saved", saved)
+  );
 };

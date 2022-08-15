@@ -9,9 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@uptime/lib": "link:../lib",
     "antd": "^4.22.4",
+    "axios": "^0.27.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@serverless-stack/static-site-env": "^1.7.0",

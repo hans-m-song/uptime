@@ -17,13 +17,21 @@
     "@serverless-stack/core": "^1.7.0",
     "@serverless-stack/resources": "^1.7.0",
     "@tsconfig/node16": "^1.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@uptime/web": "workspace:^0.0.0",
     "aws-cdk-lib": "2.32.0",
+    "chalk": "^5.0.1",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "fs-extra": "^10.1.0",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.4",
     "vitest": "^0.21.1"
-  },
-  "workspaces": [
-    "services",
-    "web"
-  ]
+  }
 }

@@ -1,30 +1,39 @@
-import { log, MaybeSuccess } from "@uptime/lib";
-import { ITarget, TargetSchema } from "@uptime/lib/models";
+import { log, MaybeSuccess, slug } from "@uptime/lib";
+import { IPartialTarget, ITarget, TargetSchema } from "@uptime/lib/models";
 import { config } from "~/config";
 import { dynamodb } from "~/lib/dynamodb";
 
 export class Target implements ITarget {
+  slug: string;
   url: string;
   name: string;
   lastError?: unknown;
 
-  constructor({ url, name }: ITarget) {
-    this.url = url;
-    this.name = name;
+  constructor(target: IPartialTarget) {
+    this.slug = target.slug ?? slug(target.url);
+    this.url = target.url;
+    this.name = target.name;
   }
 
   static async fromURL(url: string): Promise<MaybeSuccess<Target>> {
-    const result = await dynamodb.getItem(config.targetTableName, { url });
+    return Target.fromSlug(slug(url));
+  }
+
+  static async fromSlug(slug: string): Promise<MaybeSuccess<Target>> {
+    const result = await dynamodb.getItem(config.targetTableName, { slug });
     if (!result) {
-      return { success: false, error: new Error(`Target not found: "${url}"`) };
+      return {
+        success: false,
+        error: new Error(`Target not found: "${slug}"`),
+      };
     }
 
     const parsed = TargetSchema.safeParse(result);
     if (!parsed.success) {
       log.warn(
-        "Target.fromURL",
+        "Target.fromSlug",
         "item does not match schema",
-        log.fragment("url", url),
+        log.fragment("slug", slug),
         log.fragment("error", parsed.error.flatten())
       );
       return { success: false, error: parsed.error };
@@ -54,7 +63,7 @@ export class Target implements ITarget {
   }
 
   toJSON(): ITarget {
-    return { url: this.url, name: this.name };
+    return { slug: this.slug, url: this.url, name: this.name };
   }
 
   async save(): Promise<boolean> {

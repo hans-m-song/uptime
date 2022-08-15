@@ -2,7 +2,7 @@ import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import { tryParseJSON } from "@uptime/lib/utils";
 import { response, StatusCode } from "~/lib/http";
 import { Target } from "~/models/target";
-import { TargetSchema } from "@uptime/lib/models/target";
+import { PartialTargetSchema } from "@uptime/lib/models/target";
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   if (!event.body) {
@@ -18,7 +18,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     });
   }
 
-  const validated = TargetSchema.safeParse(parsed.data);
+  const validated = PartialTargetSchema.safeParse(parsed.data);
   if (!validated.success) {
     return response("invalid payload", {
       statusCode: StatusCode.BadRequest,

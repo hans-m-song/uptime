@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly REGION: string
-  readonly API_ENDPOINT: string
+  readonly VITE_API_ENDPOINT: string
 }
 
 interface ImportMeta {

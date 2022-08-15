@@ -3,13 +3,13 @@ import { response, StatusCode } from "~/lib/http";
 import { Target } from "~/models/target";
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  if (!event.pathParameters?.id) {
-    return response("must provide ID", {
+  if (!event.pathParameters?.slug) {
+    return response("must provide slug", {
       statusCode: StatusCode.BadRequest,
     });
   }
 
-  const target = await Target.fromURL(event.pathParameters.id);
+  const target = await Target.fromURL(event.pathParameters.slug);
   if (!target.success) {
     return response("OK", {
       statusCode: StatusCode.Ok,

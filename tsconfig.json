@@ -1,9 +1,8 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@uptime/lib": ["./lib/*"]
-    }
+    "strict": true,
+    "lib": ["DOM", "ES2015"]
   },
-  "include": ["stacks", "web", "services", "lib"]
+  "include": ["stacks"]
 }

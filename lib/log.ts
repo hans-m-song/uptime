@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { unpackError } from "utils";
+import { unpackError } from "./utils";
 
 enum Severity {
   Debug,
@@ -86,11 +86,11 @@ export const text = (namespace: string, severity: Severity, ...args: any[]) => {
 
   meta.push(`[${severityString(severity)}]`, `[${namespace}]`);
 
-  const items = [...meta, ...args]
+  const fragments = args
     .filter((item) => item !== undefined && item !== null && item != "")
-    .map((item) => {
-      if (typeof item !== "object") {
-        return item;
+    .map((item, i) => {
+      if (i === 0 && typeof item === "string") {
+        return `message=${stringify(item)}`;
       }
 
       if (isFragment(item)) {
@@ -105,7 +105,7 @@ export const text = (namespace: string, severity: Severity, ...args: any[]) => {
       return stringify(item);
     });
 
-  console.log(...items);
+  console.log(...meta, ...fragments);
 };
 
 export const json = (namespace: string, severity: Severity, ...args: any[]) => {

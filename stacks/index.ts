@@ -13,12 +13,16 @@ export default function (app: sst.App) {
   const hostedZone = "axatol.xyz";
 
   const apiDomainName = app.local
-    ? "uptime-api-debug.k8s.axatol.xyz"
-    : "uptime-api.k8s.axatol.xyz";
+    ? "uptime-api-debug.axatol.xyz"
+    : "uptime-api.axatol.xyz";
 
   const siteDomainName = app.local
-    ? "uptime-debug.k8s.axatol.xyz"
-    : "uptime.k8s.axatol.xyz";
+    ? "uptime-debug.axatol.xyz"
+    : "uptime.axatol.xyz";
+
+  const allowOrigins = app.local
+    ? ["http://127.0.0.1:5173"]
+    : [`https://${siteDomainName}`];
 
   app.stack(function stack({ stack }) {
     const historyTable = new sst.Table(stack, "history-table", {
@@ -27,15 +31,13 @@ export default function (app: sst.App) {
     });
 
     const targetTable = new sst.Table(stack, "target-table", {
-      fields: { url: "string" },
-      primaryIndex: { partitionKey: "url" },
+      fields: { slug: "string" },
+      primaryIndex: { partitionKey: "slug" },
     });
 
     stack.addDefaultFunctionPermissions([historyTable, targetTable]);
-    stack.addDefaultFunctionEnv({
-      HISTORY_TABLE_NAME: historyTable.tableName,
-      TARGET_TABLE_NAME: targetTable.tableName,
-    });
+    stack.addDefaultFunctionEnv({ HISTORY_TABLE_NAME: historyTable.tableName });
+    stack.addDefaultFunctionEnv({ TARGET_TABLE_NAME: targetTable.tableName });
 
     new sst.Cron(stack, "cron", {
       schedule: "rate(5 minutes)",
@@ -44,11 +46,11 @@ export default function (app: sst.App) {
 
     const api = new sst.Api(stack, "api", {
       customDomain: { domainName: apiDomainName, hostedZone },
-      cors: { allowOrigins: [`https://${siteDomainName}`] },
+      cors: { allowOrigins },
       routes: {
         "GET    /api/targets": "functions/listTargets.handler",
         "POST   /api/targets": "functions/createTarget.handler",
-        "DELETE /api/targets/{id}": "functions/deleteTarget.handler",
+        // "DELETE /api/targets/{slug}": "functions/deleteTarget.handler",
         "GET    /api/uptime": "functions/getUptime.handler",
         "POST   /api/heartbeat": "functions/submitHeartbeat.handler",
       },
@@ -59,7 +61,7 @@ export default function (app: sst.App) {
       customDomain: { domainName: siteDomainName, hostedZone },
       environment: {
         REGION: stack.region,
-        API_ENDPOINT: api.url,
+        VITE_API_ENDPOINT: apiDomainName, // api.url,
       },
     });
 
