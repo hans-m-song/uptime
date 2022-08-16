@@ -56,4 +56,4 @@ export type MaybeSuccess<T, E = unknown> =
   | { success: false; error: E };
 
 export const slug = (input: string) =>
-  input.toLowerCase().replace(/[^a-z]+/g, "-");
+  input.toLowerCase().replace(/[^a-z0-9]+/g, "-");

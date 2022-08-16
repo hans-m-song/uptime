@@ -13,13 +13,17 @@ export const NavigationMenu = () => {
       return ["dashboard"];
     }
 
+    if (pathname === "/targets/new") {
+      return ["create-target"];
+    }
+
     if (!pathname.startsWith("/targets")) {
       return ["dashboard"];
     }
 
     const matched = targets.find(({ slug }) => pathname.endsWith(slug));
     if (matched) {
-      return ["targets", matched.slug];
+      return [matched.slug];
     }
 
     return ["targets"];
@@ -50,7 +54,7 @@ export const NavigationMenu = () => {
             {
               icon: <PlusOutlined />,
               label: <Link to={`/targets/new`}>Create Target</Link>,
-              key: "create",
+              key: "create-target",
             },
           ],
         },

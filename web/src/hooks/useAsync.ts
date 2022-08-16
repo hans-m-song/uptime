@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { useMounted } from "./useMounted";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AsyncFn = (...args: any[]) => Promise<any>;
 export type AsyncState<T> = { loading: boolean; error?: Error; value?: T };
-export type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 
 export const useAsync = <
   F extends AsyncFn,
@@ -10,7 +11,7 @@ export const useAsync = <
   A extends Parameters<F>
 >(
   fn: F
-): [AsyncState<R>, () => Promise<void>] => {
+): [AsyncState<R>, (...args: A) => Promise<void>] => {
   const mounted = useMounted();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();

@@ -50,7 +50,7 @@ export default function (app: sst.App) {
       routes: {
         "GET    /api/targets": "functions/listTargets.handler",
         "POST   /api/targets": "functions/createTarget.handler",
-        // "DELETE /api/targets/{slug}": "functions/deleteTarget.handler",
+        "DELETE /api/targets/{slug}": "functions/deleteTarget.handler",
         "GET    /api/uptime": "functions/getUptime.handler",
         "POST   /api/heartbeat": "functions/submitHeartbeat.handler",
       },

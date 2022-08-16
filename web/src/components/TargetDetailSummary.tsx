@@ -7,7 +7,7 @@ import { TargetDetailHeader } from "./TargetDetailHeader";
 export const TargetDetail = () => {
   const nav = useNavigate();
   const { id } = useParams();
-  const { targets } = useTargets();
+  const { targets, listTargets } = useTargets();
   const target = targets.find(({ slug }) => id === slug);
   const toRoot = () => nav("/");
 
@@ -25,7 +25,11 @@ export const TargetDetail = () => {
 
   return (
     <Space direction="vertical" size="small" style={{ width: "100%" }}>
-      <TargetDetailHeader target={target} />
+      <TargetDetailHeader
+        target={target}
+        onBack={toRoot}
+        onDelete={listTargets}
+      />
     </Space>
   );
 };

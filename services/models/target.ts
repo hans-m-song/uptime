@@ -87,7 +87,7 @@ export class Target implements ITarget {
 
   async delete(): Promise<boolean> {
     try {
-      await dynamodb.deleteItem(config.targetTableName, { url: this.url });
+      await dynamodb.deleteItem(config.targetTableName, { slug: this.slug });
       return true;
     } catch (error) {
       log.error(
